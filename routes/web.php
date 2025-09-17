@@ -28,8 +28,8 @@ Route::middleware('auth')->group(function () {
 // 게시판 라우트
 Route::prefix('board/{board_code}')->name('board.')->group(function () {
     Route::get('/', [BoardController::class, 'index'])->name('index');
-    Route::get('/create', [BoardController::class, 'create'])->name('create');
-    Route::post('/', [BoardController::class, 'store'])->name('store');
+    Route::get('/create', [BoardController::class, 'create'])->middleware('auth')->name('create');
+    Route::post('/', [BoardController::class, 'store'])->middleware('auth')->name('store');
     Route::get('/{post}', [BoardController::class, 'show'])->name('show');
     Route::get('/{post}/edit', [BoardController::class, 'edit'])->name('edit');
     Route::put('/{post}', [BoardController::class, 'update'])->name('update');

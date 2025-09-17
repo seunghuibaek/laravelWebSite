@@ -172,4 +172,58 @@ MIT License
 
 ## 지원
 
-문의사항이 있으시면 관리자에게 연락해 주세요.
+## 호스팅 업로드
+php artisan key:generate
+패키지 설치 : composer install --no-dev --optimize-autoloader
+
+cache 최적화
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
+파일 업로드시 제외해도 되는 것
+.git/
+tests/
+storage/logs/* (비워도 됨)
+
+경로 설정
+루트 디렉토리 안에 index.php 수정
+require __DIR__.'/../vendor/autoload.php';
+$app = require_once __DIR__.'/../bootstrap/app.php';
+위 부분 실제 연결 경로로 수정
+ex) require '/home/hosting_users/아이디/laravel-app/vendor/autoload.php';
+    $app = require_once '/home/hosting_users/아이디/laravel-app/bootstrap/app.php';
+
+storage, bootstrap/cache 권한 775
+
+루트 디렉토리/storage 복사 (logs는 제외)
+
+루트 디렉토리에 .httaccess 파일 생성
+
+[//]: # (<IfModule mod_rewrite.c>)
+[//]: # (RewriteEngine On)
+[//]: # ()
+[//]: # (    # &#40;선택&#41; HTTP -> HTTPS 강제)
+[//]: # (    # RewriteCond %{HTTPS} !=on)
+[//]: # (    # RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301])
+[//]: # ()
+[//]: # (    RewriteCond %{REQUEST_FILENAME} !-d)
+[//]: # (    RewriteCond %{REQUEST_FILENAME} !-f)
+[//]: # (    RewriteRule ^ index.php [L])
+[//]: # (</IfModule>)
+
+.env 파일 체크
+APP_URL=https://your-domain
+# DB 설정: 닷홈에서 받은 정보로
+DB_CONNECTION=mysql
+DB_HOST=localhost (닷홈에서 127.0.0.1이 적용되지 않음)
+DB_PORT=3306
+
+bootstrap/cache/config.php 파일 삭제 필요. 미삭제시 local환경 정보가 설정됨
+
+db 연결 안될 시 dbtest.php 파일 실행하여 확인
+
+db 접속 오류가 계속 되는 경우
+DB_SOCKET=/var/lib/mysql/mysql.sock 추가
+소켓 경로는 socket.php 파일 참고
+

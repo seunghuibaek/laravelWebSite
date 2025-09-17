@@ -12,6 +12,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
+            // Override default auth middleware to use custom redirect logic
+            'auth' => \App\Http\Middleware\Authenticate::class,
             'manager.auth' => \App\Http\Middleware\ManagerAuth::class,
         ]);
     })
