@@ -89,6 +89,11 @@ class BoardController extends Controller
             abort(403, '이 게시판에는 글을 작성할 수 없습니다.');
         }
 
+        // 기능설정: 사용자 글등록 허용 시에도 로그인한 회원만 글쓰기 가능
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('error', '로그인한 회원만 글을 작성할 수 있습니다.');
+        }
+
         return view('front.board.create', compact('board'));
     }
 
@@ -103,48 +108,29 @@ class BoardController extends Controller
             abort(403, '이 게시판에는 글을 작성할 수 없습니다.');
         }
 
-        // 로그인 사용자와 비로그인 사용자에 따른 다른 검증 규칙
-        if (auth()->check()) {
-            $request->validate([
-                'title' => 'required|string|max:255',
-                'content' => 'required|string',
-                'files.*' => 'file|max:' . ($board->max_file_size * 1024),
-            ]);
-        } else {
-            $request->validate([
-                'title' => 'required|string|max:255',
-                'content' => 'required|string',
-                'author_name' => 'required|string|max:100',
-                'author_email' => 'nullable|email|max:255',
-                'password' => 'required|string|min:4',
-                'files.*' => 'file|max:' . ($board->max_file_size * 1024),
-            ]);
+        // 글쓰기는 로그인 회원만 가능 (요청이 비로그인 상태로 오면 로그인 페이지로 이동)
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('error', '로그인한 회원만 글을 작성할 수 있습니다.');
         }
 
-        // 로그인 사용자와 비로그인 사용자에 따른 다른 데이터 저장
-        if (auth()->check()) {
-            $post = BoardPost::create([
-                'board_id' => $board->id,
-                'title' => $request->title,
-                'content' => $request->get('content'),
-                'author_name' => auth()->user()->name,
-                'author_email' => auth()->user()->email,
-                'user_id' => auth()->id(),
-                'is_secret' => $request->boolean('is_secret'),
-                'ip_address' => $request->ip(),
-            ]);
-        } else {
-            $post = BoardPost::create([
-                'board_id' => $board->id,
-                'title' => $request->title,
-                'content' => $request->get('content'),
-                'author_name' => $request->author_name,
-                'author_email' => $request->author_email,
-                'password' => bcrypt($request->password),
-                'is_secret' => $request->boolean('is_secret'),
-                'ip_address' => $request->ip(),
-            ]);
-        }
+        // 검증 규칙 (로그인 사용자 전용)
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+            'files.*' => 'file|max:' . ($board->max_file_size * 1024),
+        ]);
+
+        // 데이터 저장 (로그인 사용자)
+        $post = BoardPost::create([
+            'board_id' => $board->id,
+            'title' => $request->title,
+            'content' => $request->get('content'),
+            'author_name' => auth()->user()->name,
+            'author_email' => auth()->user()->email,
+            'user_id' => auth()->id(),
+            'is_secret' => $request->boolean('is_secret'),
+            'ip_address' => $request->ip(),
+        ]);
 
         // 파일 업로드 처리
         if ($board->use_file_upload && $request->hasFile('files')) {

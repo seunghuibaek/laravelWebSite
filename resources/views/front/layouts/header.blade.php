@@ -1,22 +1,22 @@
 <header class="header">
     <!-- Top Bar -->
-    <div class="top-bar bg-dark text-white py-2">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <small>
-                        <i class="fas fa-envelope me-2"></i>
-                        {{ \App\Models\SystemSetting::get('admin_email', 'admin@example.com') }}
-                    </small>
-                </div>
-                <div class="col-md-6 text-end">
-                    <a href="{{ route('manager.login') }}" class="text-white text-decoration-none">
-                        <i class="fas fa-user-cog me-1"></i> 관리자
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+{{--    <div class="top-bar bg-dark text-white py-2">--}}
+{{--        <div class="container">--}}
+{{--            <div class="row align-items-center">--}}
+{{--                <div class="col-md-6">--}}
+{{--                    <small>--}}
+{{--                        <i class="fas fa-envelope me-2"></i>--}}
+{{--                        {{ \App\Models\SystemSetting::get('admin_email', 'admin@example.com') }}--}}
+{{--                    </small>--}}
+{{--                </div>--}}
+{{--                <div class="col-md-6 text-end">--}}
+{{--                    <a href="{{ route('manager.login') }}" class="text-white text-decoration-none">--}}
+{{--                        <i class="fas fa-user-cog me-1"></i> 관리자--}}
+{{--                    </a>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
 
     <!-- Main Header -->
     <div class="main-header bg-white shadow-sm">

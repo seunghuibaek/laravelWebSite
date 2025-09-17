@@ -9,6 +9,7 @@ use App\Http\Controllers\Manager\InquiryController;
 use App\Http\Controllers\Manager\SystemSettingController;
 use App\Http\Controllers\Manager\StatisticsController;
 use App\Http\Controllers\Manager\BannerController;
+use App\Http\Controllers\Manager\UserController;
 use Illuminate\Support\Facades\Route;
 
 // 관리자 인증 관련 라우트
@@ -64,6 +65,9 @@ Route::prefix('manager')->name('manager.')->group(function () {
         // 배너 관리
         Route::resource('banners', BannerController::class)->except(['show']);
         Route::post('banners/{banner}/toggle', [BannerController::class, 'toggle'])->name('banners.toggle');
+
+        // 회원관리
+        Route::resource('users', UserController::class)->except(['show']);
 
         // 통계
         Route::get('statistics', [StatisticsController::class, 'index'])->name('statistics.index');

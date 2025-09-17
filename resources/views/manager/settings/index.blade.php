@@ -8,15 +8,16 @@
     <div class="col-lg-8">
         <form action="{{ route('manager.settings.update') }}" method="POST">
             @csrf
-            
+
             @foreach($settings as $group => $groupSettings)
             <div class="card mb-4">
                 <div class="card-header">
                     <h6 class="mb-0">
-                        <i class="fas fa-cog"></i> 
-                        {{ ucfirst($group) === 'General' ? '일반 설정' : 
-                           (ucfirst($group) === 'Board' ? '게시판 설정' : 
-                           (ucfirst($group) === 'Security' ? '보안 설정' : ucfirst($group))) }}
+                        <i class="fas fa-cog"></i>
+                        {{ ucfirst($group) === 'General' ? '일반 설정' :
+                           (ucfirst($group) === 'Board' ? '게시판 설정' :
+                           (ucfirst($group) === 'Security' ? '보안 설정' :
+                           (strtolower($group) === 'sns' ? 'SNS 설정' : ucfirst($group)))) }}
                     </h6>
                 </div>
                 <div class="card-body">
@@ -25,18 +26,18 @@
                         <label for="setting_{{ $setting->key }}" class="form-label">
                             {{ $setting->label }}
                             @if($setting->description)
-                                <i class="fas fa-info-circle text-muted ms-1" 
-                                   data-bs-toggle="tooltip" 
+                                <i class="fas fa-info-circle text-muted ms-1"
+                                   data-bs-toggle="tooltip"
                                    title="{{ $setting->description }}"></i>
                             @endif
                         </label>
-                        
+
                         @if($setting->type === 'boolean')
                             <div class="form-check form-switch">
-                                <input class="form-check-input" 
-                                       type="checkbox" 
-                                       id="setting_{{ $setting->key }}" 
-                                       name="settings[{{ $setting->key }}]" 
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       id="setting_{{ $setting->key }}"
+                                       name="settings[{{ $setting->key }}]"
                                        value="true"
                                        {{ $setting->getCastedValue() ? 'checked' : '' }}>
                                 <label class="form-check-label" for="setting_{{ $setting->key }}">
@@ -44,25 +45,25 @@
                                 </label>
                             </div>
                         @elseif($setting->type === 'number')
-                            <input type="number" 
-                                   class="form-control" 
-                                   id="setting_{{ $setting->key }}" 
-                                   name="settings[{{ $setting->key }}]" 
+                            <input type="number"
+                                   class="form-control"
+                                   id="setting_{{ $setting->key }}"
+                                   name="settings[{{ $setting->key }}]"
                                    value="{{ $setting->value }}">
                         @elseif($setting->type === 'json')
-                            <textarea class="form-control" 
-                                      id="setting_{{ $setting->key }}" 
-                                      name="settings[{{ $setting->key }}]" 
+                            <textarea class="form-control"
+                                      id="setting_{{ $setting->key }}"
+                                      name="settings[{{ $setting->key }}]"
                                       rows="4">{{ $setting->value }}</textarea>
                             <small class="form-text text-muted">JSON 형식으로 입력하세요.</small>
                         @else
-                            <input type="text" 
-                                   class="form-control" 
-                                   id="setting_{{ $setting->key }}" 
-                                   name="settings[{{ $setting->key }}]" 
+                            <input type="text"
+                                   class="form-control"
+                                   id="setting_{{ $setting->key }}"
+                                   name="settings[{{ $setting->key }}]"
                                    value="{{ $setting->value }}">
                         @endif
-                        
+
                         @if($setting->description)
                             <small class="form-text text-muted">{{ $setting->description }}</small>
                         @endif
@@ -71,7 +72,7 @@
                 </div>
             </div>
             @endforeach
-            
+
             <div class="d-flex justify-content-end gap-2">
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save"></i> 설정 저장
@@ -79,7 +80,7 @@
             </div>
         </form>
     </div>
-    
+
     <div class="col-lg-4">
         <!-- 설정 관리 -->
         <div class="card mb-4">
@@ -90,7 +91,7 @@
                 <a href="{{ route('manager.settings.create') }}" class="btn btn-success w-100 mb-3">
                     <i class="fas fa-plus"></i> 새 설정 추가
                 </a>
-                
+
                 <div class="alert alert-info">
                     <h6><i class="fas fa-info-circle"></i> 설정 타입</h6>
                     <ul class="mb-0 small">
@@ -102,7 +103,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- 현재 설정 요약 -->
         <div class="card">
             <div class="card-header">
@@ -126,15 +127,15 @@
                                 @else
                                     <span class="text-muted">{{ Str::limit($setting->value, 15) }}</span>
                                 @endif
-                                
-                                <form action="{{ route('manager.settings.destroy', $setting) }}" 
-                                      method="POST" 
+
+                                <form action="{{ route('manager.settings.destroy', $setting) }}"
+                                      method="POST"
                                       class="d-inline ms-1">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" 
-                                            class="btn btn-sm btn-outline-danger btn-delete" 
-                                            data-bs-toggle="tooltip" 
+                                    <button type="submit"
+                                            class="btn btn-sm btn-outline-danger btn-delete"
+                                            data-bs-toggle="tooltip"
                                             title="삭제">
                                         <i class="fas fa-trash fa-xs"></i>
                                     </button>
@@ -163,12 +164,12 @@ $(document).ready(function() {
             label.text('사용 안함');
         }
     });
-    
+
     // JSON 유효성 검사
     $('textarea[name*="settings"]').each(function() {
         const settingKey = $(this).attr('name').match(/\[(.*?)\]/)[1];
         const setting = @json($settings->flatten()->keyBy('key'));
-        
+
         if (setting[settingKey] && setting[settingKey].type === 'json') {
             $(this).on('blur', function() {
                 try {

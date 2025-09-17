@@ -38,9 +38,13 @@
                 </nav>
             </div>
             <div class="col-md-6 text-end">
-                @if($board->allow_user_write)
+                @if($board->allow_user_write && auth()->check())
                     <a href="{{ route('board.create', $board->board_code) }}" class="btn btn-primary">
                         <i class="fas fa-pen me-2"></i>글쓰기
+                    </a>
+                @elseif($board->allow_user_write && !auth()->check())
+                    <a href="{{ route('login') }}" class="btn btn-outline-primary" title="로그인한 회원만 글쓰기가 가능합니다.">
+                        <i class="fas fa-sign-in-alt me-2"></i>로그인 후 글쓰기
                     </a>
                 @endif
             </div>
@@ -152,9 +156,13 @@
                 <div class="text-center py-5">
                     <i class="fas fa-images fa-3x text-muted mb-3"></i>
                     <h5 class="text-muted">등록된 게시글이 없습니다.</h5>
-                    @if($board->allow_user_write)
+                    @if($board->allow_user_write && auth()->check())
                         <a href="{{ route('board.create', $board->board_code) }}" class="btn btn-primary mt-3">
                             <i class="fas fa-pen me-2"></i>첫 번째 글 작성하기
+                        </a>
+                    @elseif($board->allow_user_write && !auth()->check())
+                        <a href="{{ route('login') }}" class="btn btn-outline-primary mt-3">
+                            <i class="fas fa-sign-in-alt me-2"></i>로그인 후 글쓰기
                         </a>
                     @endif
                 </div>
@@ -251,9 +259,13 @@
                         <a href="{{ route('board.index', $board->board_code) }}" class="btn btn-secondary mt-3">
                             <i class="fas fa-redo me-2"></i>전체 게시글 보기
                         </a>
-                    @elseif($board->allow_user_write)
+                    @elseif($board->allow_user_write && auth()->check())
                         <a href="{{ route('board.create', $board->board_code) }}" class="btn btn-primary mt-3">
                             <i class="fas fa-pen me-2"></i>첫 번째 글 작성하기
+                        </a>
+                    @elseif($board->allow_user_write && !auth()->check())
+                        <a href="{{ route('login') }}" class="btn btn-outline-primary mt-3">
+                            <i class="fas fa-sign-in-alt me-2"></i>로그인 후 글쓰기
                         </a>
                     @endif
                 </div>

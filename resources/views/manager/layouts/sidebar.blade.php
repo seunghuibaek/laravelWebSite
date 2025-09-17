@@ -1,3 +1,4 @@
+@php use App\Models\Board;use App\Models\Inquiry; @endphp
 <div class="sidebar">
     <div class="sidebar-header">
         <h4><i class="fas fa-cogs"></i> 관리자</h4>
@@ -31,29 +32,30 @@
 
             <!-- 게시글 관리 -->
             @php
-                $boards = \App\Models\Board::orderBy('sort_order')->orderBy('board_name')->get();
+                $boards = Board::orderBy('sort_order')->orderBy('board_name')->get();
             @endphp
             @if($boards->count() > 0)
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#postsSubmenu" aria-expanded="false">
-                    <i class="fas fa-file-alt"></i>
-                    <span>게시글 관리</span>
-                    <i class="fas fa-chevron-down ms-auto"></i>
-                </a>
-                <div class="collapse" id="postsSubmenu">
-                    <ul class="nav flex-column ms-3">
-                        @foreach($boards as $board)
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('manager.posts.*') && request()->route('board_code') === $board->board_code ? 'active' : '' }}"
-                               href="{{ route('manager.posts.index', $board->board_code) }}">
-                                <i class="fas fa-circle fa-xs me-2"></i>
-                                {{ $board->board_name }}
-                            </a>
-                        </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#postsSubmenu"
+                       aria-expanded="false">
+                        <i class="fas fa-file-alt"></i>
+                        <span>게시글 관리</span>
+                        <i class="fas fa-chevron-down ms-auto"></i>
+                    </a>
+                    <div class="collapse" id="postsSubmenu">
+                        <ul class="nav flex-column ms-3">
+                            @foreach($boards as $board)
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->routeIs('manager.posts.*') && request()->route('board_code') === $board->board_code ? 'active' : '' }}"
+                                       href="{{ route('manager.posts.index', $board->board_code) }}">
+                                        <i class="fas fa-circle fa-xs me-2"></i>
+                                        {{ $board->board_name }}
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </li>
             @endif
 
             <li class="nav-item">
@@ -69,7 +71,7 @@
                    href="{{ route('manager.inquiries.index') }}">
                     <i class="fas fa-envelope"></i>
                     <span>문의하기 관리</span>
-                    @if($pendingInquiries = \App\Models\Inquiry::pending()->count())
+                    @if($pendingInquiries = Inquiry::pending()->count())
                         <span class="badge bg-danger ms-2">{{ $pendingInquiries }}</span>
                     @endif
                 </a>
@@ -98,6 +100,16 @@
                     <span>시스템 설정</span>
                 </a>
             </li>
+
+
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('manager.users.*') ? 'active' : '' }}"
+                   href="{{ route('manager.users.index') }}">
+                    <i class="fas fa-users"></i>
+                    <span>회원관리</span>
+                </a>
+            </li>
+
         </ul>
     </div>
 </div>
