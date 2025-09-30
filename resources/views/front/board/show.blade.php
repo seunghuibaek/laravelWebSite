@@ -107,6 +107,7 @@
                                     좋아요 <span class="like-count">{{ $post->like_count }}</span>
                                 </button>
                             </div>
+                            @if($board->allow_user_write && auth()->check())
                             <div>
                                 <a href="{{ route('board.edit', [$board->board_code, $post]) }}" class="btn btn-outline-primary btn-sm">
                                     <i class="fas fa-edit me-1"></i>수정
@@ -115,6 +116,7 @@
                                     <i class="fas fa-trash me-1"></i>삭제
                                 </button>
                             </div>
+                            @endif
                         </div>
                     </div>
                 </article>
@@ -334,7 +336,7 @@
         </div>
     </div>
 </section>
-
+@if($board->allow_user_write && auth()->check())
 <!-- Delete Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1">
     <div class="modal-dialog">
@@ -361,6 +363,7 @@
         </div>
     </div>
 </div>
+@endif
 @endsection
 
 @push('scripts')
