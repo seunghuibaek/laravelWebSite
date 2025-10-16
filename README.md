@@ -30,8 +30,13 @@
 ## 설치 방법
 
 1. **의존성 설치**
-```bash
-composer install
+2. 윈도우에서  
+  -php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+   php -r "if (hash_file('sha384', 'composer-setup.php') === 'ed0feb545ba87161262f2d45a633e34f591ebb3381f2e0063c345ebea4d228dd0043083717770234ec00c5a9f9593792') { echo 'Installer verified'.PHP_EOL; } else { echo 'Installer corrupt'.PHP_EOL; unlink('composer-setup.php'); exit(1); }"
+   php composer-setup.php
+   php -r "unlink('composer-setup.php');"
+3. composer 설치 - 이 경우 php.ini 에서 extension=zip 주석 제거해야함
+php composer install
 npm install
 ```
 

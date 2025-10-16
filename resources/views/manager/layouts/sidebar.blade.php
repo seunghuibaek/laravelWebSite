@@ -21,7 +21,13 @@
                     <span>관리자 관리</span>
                 </a>
             </li>
-
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('manager.users.*') ? 'active' : '' }}"
+                   href="{{ route('manager.users.index') }}">
+                    <i class="fas fa-users"></i>
+                    <span>회원관리</span>
+                </a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('manager.boards.*') ? 'active' : '' }}"
                    href="{{ route('manager.boards.index') }}">
@@ -100,16 +106,6 @@
                     <span>시스템 설정</span>
                 </a>
             </li>
-
-
-            <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('manager.users.*') ? 'active' : '' }}"
-                   href="{{ route('manager.users.index') }}">
-                    <i class="fas fa-users"></i>
-                    <span>회원관리</span>
-                </a>
-            </li>
-
         </ul>
     </div>
 </div>

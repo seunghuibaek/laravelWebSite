@@ -15,3 +15,12 @@ Route::middleware('auth:sanctum')->group(function () {
     // Optional: logout (revoke current token)
     Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
 });
+
+Route::post('/auth/token', function (\Illuminate\Http\Request $request) {
+    $request->validate(['email'=>'required|email','password'=>'required']);
+    $user = \App\Models\User::where('email',$request->email)->first();
+    if (!$user || !\Illuminate\Support\Facades\Hash::check($request->password, $user->password)) {
+        return response()->json(['message'=>'Invalid credentials'], 401);
+    }
+    return response()->json(['token'=>$user->createToken('talend')->plainTextToken]);
+});
