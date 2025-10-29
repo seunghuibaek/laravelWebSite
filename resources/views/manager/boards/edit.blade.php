@@ -172,7 +172,7 @@
                                            value="1"
                                            {{ old('use_editor', $board->use_editor) ? 'checked' : '' }}>
                                     <label class="form-check-label" for="use_editor">
-                                        에디터 사용 (Froala)
+                                        에디터 사용 (CKEditor 5)
                                     </label>
                                 </div>
                             </div>
@@ -251,9 +251,6 @@
 @endsection
 
 @push('scripts')
-<!-- Froala Editor JS -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/froala-editor@latest/js/froala_editor.pkgd.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/froala-editor@latest/js/languages/ko.js"></script>
 
 <script>
 $(document).ready(function() {
@@ -261,7 +258,7 @@ $(document).ready(function() {
     function toggleEditorPreview() {
         if ($('#use_editor').is(':checked')) {
             if (!$('#editor-preview').length) {
-                $('#memo').after('<div id="editor-preview" class="mt-2"><small class="text-info"><i class="fas fa-info-circle"></i> Froala Editor가 적용됩니다.</small></div>');
+                $('#memo').after('<div id="editor-preview" class="mt-2"><small class="text-info"><i class="fas fa-info-circle"></i> CKEditor 5가 적용됩니다.</small></div>');
             }
         } else {
             $('#editor-preview').remove();

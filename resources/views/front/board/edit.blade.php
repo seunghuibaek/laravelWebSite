@@ -3,10 +3,6 @@
 @section('title', '글 수정 - ' . $board->board_name)
 
 @push('styles')
-@if($board->use_editor)
-<!-- Froala Editor CSS -->
-<link href="https://cdn.jsdelivr.net/npm/froala-editor@latest/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
-@endif
 @endpush
 
 @section('content')
@@ -42,7 +38,7 @@
                             <i class="fas fa-edit me-2"></i>글 수정
                         </h5>
                     </div>
-                    
+
                     <div class="card-body">
                         <!-- Password Check Form -->
                         <div id="passwordCheck" class="mb-4">
@@ -61,66 +57,66 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Edit Form (Initially Hidden) -->
                         <div id="editForm" style="display: none;">
                             <form action="{{ route('board.update', [$board->board_code, $post]) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
                                 <input type="hidden" name="password" id="confirmedPassword">
-                                
+
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label for="author_name" class="form-label">작성자 <span class="text-danger">*</span></label>
-                                        <input type="text" 
-                                               class="form-control @error('author_name') is-invalid @enderror" 
-                                               id="author_name" 
-                                               name="author_name" 
-                                               value="{{ old('author_name', $post->author_name) }}" 
+                                        <input type="text"
+                                               class="form-control @error('author_name') is-invalid @enderror"
+                                               id="author_name"
+                                               name="author_name"
+                                               value="{{ old('author_name', $post->author_name) }}"
                                                required>
                                         @error('author_name')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                    
+
                                     <div class="col-md-6">
                                         <label for="author_email" class="form-label">이메일</label>
-                                        <input type="email" 
-                                               class="form-control @error('author_email') is-invalid @enderror" 
-                                               id="author_email" 
-                                               name="author_email" 
+                                        <input type="email"
+                                               class="form-control @error('author_email') is-invalid @enderror"
+                                               id="author_email"
+                                               name="author_email"
                                                value="{{ old('author_email', $post->author_email) }}">
                                         @error('author_email')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
-                                
+
                                 <div class="mb-3">
                                     <label for="title" class="form-label">제목 <span class="text-danger">*</span></label>
-                                    <input type="text" 
-                                           class="form-control @error('title') is-invalid @enderror" 
-                                           id="title" 
-                                           name="title" 
-                                           value="{{ old('title', $post->title) }}" 
+                                    <input type="text"
+                                           class="form-control @error('title') is-invalid @enderror"
+                                           id="title"
+                                           name="title"
+                                           value="{{ old('title', $post->title) }}"
                                            required>
                                     @error('title')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                
+
                                 <div class="mb-3">
                                     <label for="content" class="form-label">내용 <span class="text-danger">*</span></label>
                                     @if($board->use_editor)
-                                        <textarea class="form-control @error('content') is-invalid @enderror" 
-                                                  id="content" 
-                                                  name="content" 
+                                        <textarea class="form-control @error('content') is-invalid @enderror"
+                                                  id="content"
+                                                  name="content"
                                                   rows="15">{{ old('content', $post->content) }}</textarea>
                                     @else
-                                        <textarea class="form-control @error('content') is-invalid @enderror" 
-                                                  id="content" 
-                                                  name="content" 
-                                                  rows="15" 
+                                        <textarea class="form-control @error('content') is-invalid @enderror"
+                                                  id="content"
+                                                  name="content"
+                                                  rows="15"
                                                   placeholder="내용을 입력하세요..."
                                                   required>{{ old('content', $post->content) }}</textarea>
                                     @endif
@@ -128,7 +124,7 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                
+
                                 <!-- Existing Files -->
                                 @if($post->files->count() > 0)
                                 <div class="mb-3">
@@ -144,8 +140,8 @@
                                                 @endif
                                             </div>
                                             <div class="flex-grow-1">
-                                                <a href="{{ Storage::url($file->file_path) }}" 
-                                                   target="_blank" 
+                                                <a href="{{ Storage::url($file->file_path) }}"
+                                                   target="_blank"
                                                    class="text-decoration-none">
                                                     {{ $file->original_name }}
                                                 </a>
@@ -163,20 +159,20 @@
                                     </div>
                                 </div>
                                 @endif
-                                
+
                                 @if($board->use_file_upload)
                                 <div class="mb-3">
                                     <label for="files" class="form-label">
-                                        새 파일 첨부 
+                                        새 파일 첨부
                                         <small class="text-muted">
                                             (최대 {{ $board->max_file_count }}개, 개당 {{ number_format($board->max_file_size) }}KB 이하)
                                         </small>
                                     </label>
-                                    <input type="file" 
-                                           class="form-control @error('files.*') is-invalid @enderror" 
-                                           id="files" 
-                                           name="files[]" 
-                                           multiple 
+                                    <input type="file"
+                                           class="form-control @error('files.*') is-invalid @enderror"
+                                           id="files"
+                                           name="files[]"
+                                           multiple
                                            accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
                                     @error('files.*')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -184,13 +180,13 @@
                                     <div class="file-preview mt-2"></div>
                                 </div>
                                 @endif
-                                
+
                                 <div class="mb-4">
                                     <div class="form-check">
-                                        <input class="form-check-input" 
-                                               type="checkbox" 
-                                               name="is_secret" 
-                                               id="is_secret" 
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               name="is_secret"
+                                               id="is_secret"
                                                value="1"
                                                {{ old('is_secret', $post->is_secret) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="is_secret">
@@ -198,7 +194,7 @@
                                         </label>
                                     </div>
                                 </div>
-                                
+
                                 <div class="d-flex justify-content-end gap-2">
                                     <a href="{{ route('board.show', [$board->board_code, $post]) }}" class="btn btn-secondary">
                                         <i class="fas fa-times me-2"></i>취소
@@ -219,23 +215,34 @@
 
 @push('scripts')
 @if($board->use_editor)
-<!-- Froala Editor JS -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/froala-editor@latest/js/froala_editor.pkgd.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/froala-editor@latest/js/languages/ko.js"></script>
+<!-- CKEditor 5 Classic -->
+<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var el = document.querySelector('#content');
+        if (el) {
+            ClassicEditor.create(el, {
+                language: 'ko'
+            }).catch(function (error) {
+                console.error(error);
+            });
+        }
+    });
+</script>
 @endif
 
 <script>
-let froalaEditor = null;
+let ckeditorInstance = null;
 
 function checkPassword() {
     const password = $('#checkPassword').val();
-    
+
     if (!password) {
         alert('비밀번호를 입력해주세요.');
         return;
     }
-    
-    // 실제로는 서버에서 비밀번호를 확인해야 하지만, 
+
+    // 실제로는 서버에서 비밀번호를 확인해야 하지만,
     // 여기서는 간단히 클라이언트에서 처리
     $.ajax({
         url: '{{ route("board.check-password", [$board->board_code, $post]) }}',
@@ -249,31 +256,11 @@ function checkPassword() {
                 $('#passwordCheck').hide();
                 $('#editForm').show();
                 $('#confirmedPassword').val(password);
-                
+
                 @if($board->use_editor)
-                // Froala Editor 초기화
-                froalaEditor = new FroalaEditor('#content', {
-                    language: 'ko',
-                    height: 400,
-                    toolbarButtons: {
-                        'moreText': {
-                            'buttons': ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting']
-                        },
-                        'moreParagraph': {
-                            'buttons': ['alignLeft', 'alignCenter', 'formatOLSimple', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent', 'quote']
-                        },
-                        'moreRich': {
-                            'buttons': ['insertLink', 'insertImage', 'insertVideo', 'insertTable', 'emoticons', 'fontAwesome', 'specialCharacters', 'embedly', 'insertFile', 'insertHR']
-                        },
-                        'moreMisc': {
-                            'buttons': ['undo', 'redo', 'fullscreen', 'print', 'getPDF', 'spellChecker', 'selectAll', 'html', 'help']
-                        }
-                    },
-                    imageUploadURL: '/upload-image',
-                    imageUploadParams: {
-                        _token: $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
+                ClassicEditor.create(document.querySelector('#content'), { language: 'ko' })
+                    .then(editor => { ckeditorInstance = editor; })
+                    .catch(error => console.error(error));
                 @endif
             } else {
                 alert('비밀번호가 일치하지 않습니다.');
@@ -314,13 +301,13 @@ $(document).ready(function() {
             checkPassword();
         }
     });
-    
+
     // 에러가 있으면 폼을 바로 표시
     @if($errors->any())
         $('#passwordCheck').hide();
         $('#editForm').show();
         $('#confirmedPassword').val('{{ old("password") }}');
-        
+
         @if($board->use_editor)
         // Froala Editor 초기화
         froalaEditor = new FroalaEditor('#content', {

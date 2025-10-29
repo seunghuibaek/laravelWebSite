@@ -4,8 +4,6 @@
 @section('page-title', '게시판 추가')
 
 @push('styles')
-<!-- Froala Editor CSS -->
-<link href="https://cdn.jsdelivr.net/npm/froala-editor@latest/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
 @endpush
 
 @section('content')
@@ -171,7 +169,7 @@
                                            value="1"
                                            {{ old('use_editor') ? 'checked' : '' }}>
                                     <label class="form-check-label" for="use_editor">
-                                        에디터 사용 (Froala)
+                                        에디터 사용 (CKEditor 5)
                                     </label>
                                 </div>
                             </div>
@@ -250,9 +248,6 @@
 @endsection
 
 @push('scripts')
-<!-- Froala Editor JS -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/froala-editor@latest/js/froala_editor.pkgd.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/froala-editor@latest/js/languages/ko.js"></script>
 
 <script>
 $(document).ready(function() {
@@ -273,7 +268,7 @@ $(document).ready(function() {
     $('#use_editor').change(function() {
         if ($(this).is(':checked')) {
             if (!$('#editor-preview').length) {
-                $('#memo').after('<div id="editor-preview" class="mt-2"><small class="text-info"><i class="fas fa-info-circle"></i> Froala Editor가 적용됩니다.</small></div>');
+                $('#memo').after('<div id="editor-preview" class="mt-2"><small class="text-info"><i class="fas fa-info-circle"></i> CKEditor 5가 적용됩니다.</small></div>');
             }
         } else {
             $('#editor-preview').remove();

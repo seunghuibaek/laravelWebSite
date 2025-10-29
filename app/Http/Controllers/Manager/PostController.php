@@ -8,6 +8,7 @@ use App\Models\BoardFile;
 use App\Models\BoardPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -218,5 +219,21 @@ class PostController extends Controller
 
             $uploadedCount++;
         }
+    }
+//    public function destroy(Request $request, $board_code, BoardPost $post)
+//    {
+//        $post->delete();
+//
+//        return redirect()->route('manager.posts.index', $board_code)->with('success', '게시글이 삭제되었습니다.');
+//    }
+    public function uploadImage(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $path = $request->file('file')->store('uploads/posts', 'public');
+
+        return response()->json(['link' => Storage::url($path)]);
     }
 }

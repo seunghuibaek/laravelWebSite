@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Manager\AuthController;
 use App\Http\Controllers\Manager\DashboardController;
 use App\Http\Controllers\Manager\ManagerController;
@@ -10,7 +11,25 @@ use App\Http\Controllers\Manager\SystemSettingController;
 use App\Http\Controllers\Manager\StatisticsController;
 use App\Http\Controllers\Manager\BannerController;
 use App\Http\Controllers\Manager\UserController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Manager\PostController;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+// 에디터 파일 업로드
+Route::post('/upload-image', [PostController::class, 'uploadImage'])->name('posts.uploadImage');
 
 // 관리자 인증 관련 라우트
 Route::prefix('manager')->name('manager.')->group(function () {
@@ -36,18 +55,22 @@ Route::prefix('manager')->name('manager.')->group(function () {
         Route::prefix('posts/{board_code}')->name('posts.')->group(function () {
             Route::get('/', [App\Http\Controllers\Manager\PostController::class, 'index'])->name('index');
             Route::get('/create', [App\Http\Controllers\Manager\PostController::class, 'create'])->name('create');
-            Route::post('/', [App\Http\Controllers\Manager\PostController::class, 'store'])->name('store');
-            Route::get('/{post}', [App\Http\Controllers\Manager\PostController::class, 'show'])->name('show');
-            Route::get('/{post}/edit', [App\Http\Controllers\Manager\PostController::class, 'edit'])->name('edit');
+            Route::post('/', [PostController::class, 'store'])->name('store');
+            Route::get('/{post}', [PostController::class, 'show'])->name('show');
+            Route::get('/{post}/edit', [PostController::class, 'edit'])->name('edit');
             Route::put('/{post}', [App\Http\Controllers\Manager\PostController::class, 'update'])->name('update');
-            Route::delete('/{post}', [App\Http\Controllers\Manager\PostController::class, 'destroy'])->name('destroy');
+            Route::delete('/{post}', [PostController::class, 'destroy'])->name('destroy');
             Route::post('/bulk-delete', [App\Http\Controllers\Manager\PostController::class, 'bulkDelete'])->name('bulk-delete');
         });
 
+
+
         // 댓글 관리
-        Route::get('comments', [CommentController::class, 'index'])->name('comments.index');
-        Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
-        Route::post('comments/bulk-delete', [CommentController::class, 'bulkDelete'])->name('comments.bulk-delete');
+        Route::prefix('comments')->name('comments.')->group(function () {
+            Route::get('/', [CommentController::class, 'index'])->name('index');
+            Route::delete('/{comment}', [CommentController::class, 'destroy'])->name('destroy');
+            Route::post('/bulk-delete', [CommentController::class, 'bulkDelete'])->name('bulk-delete');
+        });
 
         // 문의하기 관리
         Route::resource('inquiries', InquiryController::class)->only(['index', 'show', 'update', 'destroy']);

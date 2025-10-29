@@ -3,10 +3,6 @@
 @section('title', '글쓰기 - ' . $board->board_name)
 
 @push('styles')
-@if($board->use_editor)
-<!-- Froala Editor CSS -->
-<link href="https://cdn.jsdelivr.net/npm/froala-editor@latest/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
-@endif
 @endpush
 
 @section('content')
@@ -117,6 +113,7 @@
                                     <textarea class="form-control @error('content') is-invalid @enderror"
                                               id="content"
                                               name="content"
+                                              cols="30"
                                               rows="15">{{ old('content') }}</textarea>
                                 @else
                                     <textarea class="form-control @error('content') is-invalid @enderror"
@@ -185,36 +182,20 @@
 
 @push('scripts')
 @if($board->use_editor)
-<!-- Froala Editor JS -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/froala-editor@latest/js/froala_editor.pkgd.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/froala-editor@latest/js/languages/ko.js"></script>
-
+<!-- CKEditor 5 Classic -->
+<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 <script>
-$(document).ready(function() {
-    // Froala Editor 초기화
-    new FroalaEditor('#content', {
-        language: 'ko',
-        height: 400,
-        toolbarButtons: {
-            'moreText': {
-                'buttons': ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting']
-            },
-            'moreParagraph': {
-                'buttons': ['alignLeft', 'alignCenter', 'formatOLSimple', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent', 'quote']
-            },
-            'moreRich': {
-                'buttons': ['insertLink', 'insertImage', 'insertVideo', 'insertTable', 'emoticons', 'fontAwesome', 'specialCharacters', 'embedly', 'insertFile', 'insertHR']
-            },
-            'moreMisc': {
-                'buttons': ['undo', 'redo', 'fullscreen', 'print', 'getPDF', 'spellChecker', 'selectAll', 'html', 'help']
-            }
-        },
-        imageUploadURL: '/upload-image',
-        imageUploadParams: {
-            _token: $('meta[name="csrf-token"]').attr('content')
+    document.addEventListener('DOMContentLoaded', function () {
+        var el = document.querySelector('#content');
+        if (el) {
+            ClassicEditor.create(el, {
+                language: 'ko'
+            }).catch(function (error) {
+                console.error(error);
+            });
         }
     });
-});
+
 </script>
 @endif
 @endpush
