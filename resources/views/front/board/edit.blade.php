@@ -214,22 +214,7 @@
 @endsection
 
 @push('scripts')
-@if($board->use_editor)
-<!-- CKEditor 5 Classic -->
-<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var el = document.querySelector('#content');
-        if (el) {
-            ClassicEditor.create(el, {
-                language: 'ko'
-            }).catch(function (error) {
-                console.error(error);
-            });
-        }
-    });
-</script>
-@endif
+@include('components.editor.ckeditor-init', ['selector' => '#content', 'language' => 'ko'])
 
 <script>
 let ckeditorInstance = null;
