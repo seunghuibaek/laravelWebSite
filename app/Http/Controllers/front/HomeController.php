@@ -69,9 +69,9 @@ class HomeController extends Controller
                 $q->where('is_active', true);
             })
             ->where(function($q) use ($query) {
-                $q->where('title', 'like', "%{$query}%")
-                  ->orWhere('content', 'like', "%{$query}%")
-                  ->orWhere('author_name', 'like', "%{$query}%");
+                $q->where('title', 'like', "%$query%")
+                  ->orWhere('content', 'like', "%$query%")
+                  ->orWhere('author_name', 'like', "%$query%");
             })
             ->orderBy('created_at', 'desc')
             ->paginate(20);

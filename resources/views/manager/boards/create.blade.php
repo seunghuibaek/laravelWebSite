@@ -254,13 +254,14 @@ $(document).ready(function() {
     // 게시판 코드 자동 생성
     $('#board_name').on('input', function() {
         var boardName = $(this).val();
+        let $boardCode = $('#board_code');
         var boardCode = boardName.toLowerCase()
             .replace(/[^a-z0-9가-힣]/g, '_')
             .replace(/_{2,}/g, '_')
             .replace(/^_|_$/g, '');
 
-        if ($('#board_code').val() === '') {
-            $('#board_code').val(boardCode);
+        if ($boardCode.val() === '') {
+            $boardCode.val(boardCode);
         }
     });
 

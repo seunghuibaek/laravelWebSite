@@ -6,6 +6,8 @@ use App\Models\Board;
 use App\Models\BoardFile;
 use App\Models\BoardPost;
 use App\Models\Comment;
+use App\Models\PostLike;
+use App\Models\SystemSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -37,7 +39,7 @@ class BoardController extends Controller
 
         $posts = $query->where('is_notice', false)
             ->orderBy('created_at', 'desc')
-            ->paginate(\App\Models\SystemSetting::get('posts_per_page', 10));
+            ->paginate(SystemSetting::get('posts_per_page', 10));
 
         return view('front.board.index', compact('board', 'notices', 'posts'));
     }
@@ -241,7 +243,7 @@ class BoardController extends Controller
         $user = $request->user();
 
         // 이미 좋아요 했는지 확인
-        $already = \App\Models\PostLike::where('post_id', $post->id)
+        $already = PostLike::where('post_id', $post->id)
             ->where('user_id', $user->id)
             ->exists();
 
@@ -250,10 +252,10 @@ class BoardController extends Controller
                 'like_count' => $post->like_count,
                 'liked' => true,
                 'message' => '이미 좋아요를 누르셨습니다.'
-            ], 200);
+            ]);
         }
 
-        $like = \App\Models\PostLike::firstOrCreate([
+        $like = PostLike::firstOrCreate([
             'post_id' => $post->id,
             'user_id' => $user->id,
         ]);

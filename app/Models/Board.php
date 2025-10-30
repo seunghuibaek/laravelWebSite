@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Board extends Model
 {
@@ -41,17 +42,17 @@ class Board extends Model
         ];
     }
 
-    public function posts()
+    public function posts(): Board|HasMany
     {
         return $this->hasMany(BoardPost::class);
     }
 
-    public function activePosts()
+    public function activePosts(): Board|HasMany
     {
         return $this->hasMany(BoardPost::class)->orderBy('created_at', 'desc');
     }
 
-    public function noticePosts()
+    public function noticePosts(): Board|HasMany
     {
         return $this->hasMany(BoardPost::class)->where('is_notice', true)->orderBy('created_at', 'desc');
     }

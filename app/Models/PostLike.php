@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PostLike extends Model
 {
@@ -13,12 +14,12 @@ class PostLike extends Model
         'post_id', 'user_id'
     ];
 
-    public function post()
+    public function post(): BelongsTo
     {
         return $this->belongsTo(BoardPost::class, 'post_id');
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

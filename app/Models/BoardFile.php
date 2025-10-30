@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BoardFile extends Model
 {
@@ -27,12 +28,12 @@ class BoardFile extends Model
         ];
     }
 
-    public function post()
+    public function post(): BelongsTo
     {
         return $this->belongsTo(BoardPost::class, 'post_id');
     }
 
-    public function incrementDownloadCount()
+    public function incrementDownloadCount(): void
     {
         $this->increment('download_count');
     }

@@ -7,7 +7,6 @@ use App\Models\Board;
 use App\Models\BoardPost;
 use App\Models\BoardFile;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class BoardApiController extends Controller

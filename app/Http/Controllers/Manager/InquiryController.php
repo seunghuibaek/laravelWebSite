@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Manager;
 
 use App\Http\Controllers\front\Controller;
 use App\Models\Inquiry;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -79,7 +80,7 @@ class InquiryController extends Controller
                 $message->to($inquiry->email, $inquiry->name)
                         ->subject('[답변] ' . $inquiry->subject);
             });
-        } catch (\Exception $e) {
+        } catch (Exception) {
             // 메일 발송 실패 시 로그 기록 (실제 환경에서는 로그 처리)
         }
 

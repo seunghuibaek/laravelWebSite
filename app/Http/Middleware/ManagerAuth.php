@@ -12,7 +12,7 @@ class ManagerAuth
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param Closure(Request): (Response) $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -21,7 +21,7 @@ class ManagerAuth
         }
 
         $manager = Auth::guard('manager')->user();
-        
+
         if (!$manager->isActive()) {
             Auth::guard('manager')->logout();
             return redirect()->route('manager.login')

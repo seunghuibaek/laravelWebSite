@@ -27,7 +27,7 @@ class SystemSettingController extends Controller
             if ($setting) {
                 // boolean 타입 처리
                 if ($setting->type === 'boolean') {
-                    $value = $request->has("settings.{$key}") ? 'true' : 'false';
+                    $value = $request->has("settings.$key") ? 'true' : 'false';
                 }
 
                 $setting->update(['value' => $value]);

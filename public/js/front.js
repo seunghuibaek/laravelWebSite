@@ -33,7 +33,7 @@ $(document).ready(function() {
 
     // 이미지 지연 로딩
     if ('IntersectionObserver' in window) {
-        const imageObserver = new IntersectionObserver((entries, observer) => {
+        const imageObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const img = entry.target;
@@ -51,11 +51,10 @@ $(document).ready(function() {
 
     // 툴팁 초기화
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
-
-    // 알림 자동 숨김
+// 알림 자동 숨김
     $('.alert').each(function() {
         var alert = $(this);
         setTimeout(function() {
@@ -189,10 +188,11 @@ $(document).ready(function() {
     // 무한 스크롤 (선택사항)
     let loading = false;
     $(window).scroll(function() {
+        let $loadMoreBtn = $('.load-more-btn');
         if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
-            if (!loading && $('.load-more-btn').length) {
+            if (!loading && $loadMoreBtn.length) {
                 loading = true;
-                $('.load-more-btn').click();
+                $loadMoreBtn.click();
             }
         }
     });

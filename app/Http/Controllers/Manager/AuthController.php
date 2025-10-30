@@ -27,11 +27,9 @@ class AuthController extends Controller
             ->where('status', 'active')
             ->first();
 
-        if (!$manager || !Hash::check($request->password, $manager->password)) {
-            throw ValidationException::withMessages([
-                'username' => ['아이디 또는 비밀번호가 올바르지 않습니다.'],
-            ]);
-        }
+        if (!$manager || !Hash::check($request->password, $manager->password)) throw ValidationException::withMessages([
+            'username' => ['아이디 또는 비밀번호가 올바르지 않습니다.'],
+        ]);
 
         Auth::guard('manager')->login($manager, $request->boolean('remember'));
 

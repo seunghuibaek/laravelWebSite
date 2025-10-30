@@ -2,9 +2,13 @@
 
 use App\Http\Controllers\front\AuthController;
 use App\Http\Controllers\front\BoardController;
+use App\Http\Controllers\front\CommentController;
 use App\Http\Controllers\front\HomeController;
 use App\Http\Controllers\front\InquiryController;
 use App\Http\Controllers\front\SnsAuthController;
+use App\Models\Board;
+use App\Models\BoardPost;
+use App\Models\PostLike;
 use Illuminate\Support\Facades\Route;
 
 // 관리자 라우트 포함
@@ -43,9 +47,9 @@ Route::prefix('board/{board_code}')->name('board.')->group(function () {
 });
 
 // 호환용 좋아요 라우트 (/posts/{post}/like)
-Route::post('/posts/{post}/like', function (\Illuminate\Http\Request $request, \App\Models\BoardPost $post) {
+Route::post('/posts/{post}/like', function (\Illuminate\Http\Request $request, BoardPost $post) {
     // 활성 게시판에 속한 게시글만 좋아요 허용
-    $board = \App\Models\Board::where('id', $post->board_id)
+    $board = Board::where('id', $post->board_id)
         ->where('is_active', true)
         ->first();
     if (!$board) {
@@ -58,7 +62,7 @@ Route::post('/posts/{post}/like', function (\Illuminate\Http\Request $request, \
         return response()->json(['message' => '로그인이 필요합니다.'], 401);
     }
 
-    $already = \App\Models\PostLike::where('post_id', $post->id)
+    $already = PostLike::where('post_id', $post->id)
         ->where('user_id', $user->id)
         ->exists();
     if ($already) {
@@ -66,10 +70,10 @@ Route::post('/posts/{post}/like', function (\Illuminate\Http\Request $request, \
             'like_count' => $post->like_count,
             'liked' => true,
             'message' => '이미 좋아요를 누르셨습니다.'
-        ], 200);
+        ]);
     }
 
-    $like = \App\Models\PostLike::firstOrCreate(['post_id' => $post->id, 'user_id' => $user->id]);
+    $like = PostLike::firstOrCreate(['post_id' => $post->id, 'user_id' => $user->id]);
     if ($like->wasRecentlyCreated) {
         $post->incrementLikeCount();
         $post->refresh();
@@ -91,5 +95,5 @@ Route::prefix('inquiry')->name('inquiry.')->group(function () {
 Route::get('/search', [HomeController::class, 'search'])->name('search');
 
 // 댓글 라우트
-Route::post('/comments', [\App\Http\Controllers\front\CommentController::class, 'store'])->middleware('auth')->name('comments.store');
-Route::delete('/comments/{comment}', [\App\Http\Controllers\front\CommentController::class, 'destroy'])->name('comments.destroy');
+Route::post('/comments', [CommentController::class, 'store'])->middleware('auth')->name('comments.store');
+Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');

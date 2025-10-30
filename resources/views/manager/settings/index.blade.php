@@ -167,7 +167,7 @@ $(document).ready(function() {
 
     // JSON 유효성 검사
     $('textarea[name*="settings"]').each(function() {
-        const settingKey = $(this).attr('name').match(/\[(.*?)\]/)[1];
+        const settingKey = $(this).attr('name').match(/\[(.*?)]/)[1];
         const setting = @json($settings->flatten()->keyBy('key'));
 
         if (setting[settingKey] && setting[settingKey].type === 'json') {

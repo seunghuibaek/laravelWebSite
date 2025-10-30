@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Inquiry extends Model
 {
@@ -29,7 +30,7 @@ class Inquiry extends Model
         ];
     }
 
-    public function repliedBy()
+    public function repliedBy(): BelongsTo
     {
         return $this->belongsTo(Manager::class, 'replied_by');
     }

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class BoardPost extends Model
 {
@@ -33,27 +35,27 @@ class BoardPost extends Model
         ];
     }
 
-    public function board()
+    public function board(): BelongsTo
     {
         return $this->belongsTo(Board::class);
     }
 
-    public function files()
+    public function files(): BoardPost|HasMany
     {
         return $this->hasMany(BoardFile::class, 'post_id');
     }
 
-    public function comments()
+    public function comments(): BoardPost|HasMany
     {
         return $this->hasMany(Comment::class, 'post_id');
     }
 
-    public function parentComments()
+    public function parentComments(): BoardPost|HasMany
     {
         return $this->hasMany(Comment::class, 'post_id')->whereNull('parent_id');
     }
 
-    public function likes()
+    public function likes(): BoardPost|HasMany
     {
         return $this->hasMany(PostLike::class, 'post_id');
     }
@@ -79,12 +81,12 @@ class BoardPost extends Model
         return $query->where('is_secret', false);
     }
 
-    public function incrementViewCount()
+    public function incrementViewCount(): void
     {
         $this->increment('view_count');
     }
 
-    public function incrementLikeCount()
+    public function incrementLikeCount(): void
     {
         $this->increment('like_count');
     }

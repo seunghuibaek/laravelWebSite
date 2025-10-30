@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\front;
 
-use App\Http\Controllers\front\Controller;
 use App\Models\SystemSetting;
 use App\Models\User;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class SnsAuthController extends Controller
@@ -60,15 +61,19 @@ class SnsAuthController extends Controller
         $client = new Client(['http_errors' => false]);
 
         // 1) Exchange code for token
-        $tokenResp = $client->post($extra['token_url'], [
-            'headers' => ['Accept' => 'application/json'],
-            'form_params' => array_merge([
-                'grant_type' => 'authorization_code',
-                'code' => $code,
-                'redirect_uri' => $redirectUri,
-                'client_id' => $clientId,
-            ], $extra['token_params'] ?? [], $clientSecret ? ['client_secret' => $clientSecret] : []),
-        ]);
+        try {
+            $tokenResp = $client->post($extra['token_url'], [
+                'headers' => ['Accept' => 'application/json'],
+                'form_params' => array_merge([
+                    'grant_type' => 'authorization_code',
+                    'code' => $code,
+                    'redirect_uri' => $redirectUri,
+                    'client_id' => $clientId,
+                ], $extra['token_params'] ?? [], $clientSecret ? ['client_secret' => $clientSecret] : []),
+            ]);
+        } catch (GuzzleException $e) {
+
+        }
 
         $tokenJson = json_decode((string) $tokenResp->getBody(), true) ?: [];
         $accessToken = $tokenJson['access_token'] ?? null;
@@ -104,7 +109,7 @@ class SnsAuthController extends Controller
             $user = new User();
             $user->name = $name;
             $user->email = $email;
-            $user->password = \Illuminate\Support\Facades\Hash::make(Str::random(24));
+            $user->password = Hash::make(Str::random(24));
             $user->provider = $provider;
             $user->provider_id = $normalized['id'];
             if (!empty($normalized['avatar'])) $user->avatar = $normalized['avatar'];
@@ -166,23 +171,33 @@ class SnsAuthController extends Controller
     private function fetchUserInfo(Client $client, string $provider, string $accessToken): ?array
     {
         if ($provider === 'google') {
-            $resp = $client->get('https://www.googleapis.com/oauth2/v3/userinfo', [
-                'headers' => ['Authorization' => 'Bearer '.$accessToken],
-            ]);
-            $data = json_decode((string)$resp->getBody(), true) ?: [];
-            return $data;
+            try {
+                $resp = $client->get('https://www.googleapis.com/oauth2/v3/userinfo', [
+                    'headers' => ['Authorization' => 'Bearer ' . $accessToken],
+                ]);
+            } catch (GuzzleException $e) {
+
+            }
+            return json_decode((string)$resp->getBody(), true) ?: [];
         }
         if ($provider === 'kakao') {
-            $resp = $client->get('https://kapi.kakao.com/v2/user/me', [
-                'headers' => ['Authorization' => 'Bearer '.$accessToken],
-            ]);
-            $data = json_decode((string)$resp->getBody(), true) ?: [];
-            return $data;
+            try {
+                $resp = $client->get('https://kapi.kakao.com/v2/user/me', [
+                    'headers' => ['Authorization' => 'Bearer ' . $accessToken],
+                ]);
+            } catch (GuzzleException $e) {
+
+            }
+            return json_decode((string)$resp->getBody(), true) ?: [];
         }
         if ($provider === 'naver') {
-            $resp = $client->get('https://openapi.naver.com/v1/nid/me', [
-                'headers' => ['Authorization' => 'Bearer '.$accessToken],
-            ]);
+            try {
+                $resp = $client->get('https://openapi.naver.com/v1/nid/me', [
+                    'headers' => ['Authorization' => 'Bearer ' . $accessToken],
+                ]);
+            } catch (GuzzleException $e) {
+
+            }
             $data = json_decode((string)$resp->getBody(), true) ?: [];
             return $data['response'] ?? null;
         }

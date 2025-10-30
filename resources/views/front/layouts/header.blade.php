@@ -1,29 +1,30 @@
+@php use App\Models\SystemSetting; @endphp
 <header class="header">
     <!-- Top Bar -->
-{{--    <div class="top-bar bg-dark text-white py-2">--}}
-{{--        <div class="container">--}}
-{{--            <div class="row align-items-center">--}}
-{{--                <div class="col-md-6">--}}
-{{--                    <small>--}}
-{{--                        <i class="fas fa-envelope me-2"></i>--}}
-{{--                        {{ \App\Models\SystemSetting::get('admin_email', 'admin@example.com') }}--}}
-{{--                    </small>--}}
-{{--                </div>--}}
-{{--                <div class="col-md-6 text-end">--}}
-{{--                    <a href="{{ route('manager.login') }}" class="text-white text-decoration-none">--}}
-{{--                        <i class="fas fa-user-cog me-1"></i> 관리자--}}
-{{--                    </a>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    </div>--}}
+    {{--    <div class="top-bar bg-dark text-white py-2">--}}
+    {{--        <div class="container">--}}
+    {{--            <div class="row align-items-center">--}}
+    {{--                <div class="col-md-6">--}}
+    {{--                    <small>--}}
+    {{--                        <i class="fas fa-envelope me-2"></i>--}}
+    {{--                        {{ \App\Models\SystemSetting::get('admin_email', 'admin@example.com') }}--}}
+    {{--                    </small>--}}
+    {{--                </div>--}}
+    {{--                <div class="col-md-6 text-end">--}}
+    {{--                    <a href="{{ route('manager.login') }}" class="text-white text-decoration-none">--}}
+    {{--                        <i class="fas fa-user-cog me-1"></i> 관리자--}}
+    {{--                    </a>--}}
+    {{--                </div>--}}
+    {{--            </div>--}}
+    {{--        </div>--}}
+    {{--    </div>--}}
 
     <!-- Main Header -->
     <div class="main-header bg-white shadow-sm">
         <div class="container">
             <nav class="navbar navbar-expand-lg navbar-light">
                 <a class="navbar-brand fw-bold" href="{{ route('home') }}">
-                    {{ \App\Models\SystemSetting::get('site_name', config('app.name')) }}
+                    {{ SystemSetting::get('site_name', config('app.name')) }}
                 </a>
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -33,7 +34,8 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">
+                            <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}"
+                               href="{{ route('home') }}">
                                 <i class="fas fa-home"></i> 홈
                             </a>
                         </li>
@@ -50,17 +52,17 @@
                             @if($boards->count() <= 5)
                                 <!-- 게시판이 5개 이하일 때는 개별 메뉴로 표시 -->
                                 @foreach($boards as $board)
-                                <li class="nav-item">
-                                    <a class="nav-link {{ request()->routeIs('board.*') && request()->route('board_code') === $board->board_code ? 'active' : '' }}"
-                                       href="{{ route('board.index', $board->board_code) }}">
-                                        @if($board->board_type === 'gallery')
-                                            <i class="fas fa-images"></i>
-                                        @else
-                                            <i class="fas fa-list"></i>
-                                        @endif
-                                        {{ $board->board_name }}
-                                    </a>
-                                </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link {{ request()->routeIs('board.*') && request()->route('board_code') === $board->board_code ? 'active' : '' }}"
+                                           href="{{ route('board.index', $board->board_code) }}">
+                                            @if($board->board_type === 'gallery')
+                                                <i class="fas fa-images"></i>
+                                            @else
+                                                <i class="fas fa-list"></i>
+                                            @endif
+                                            {{ $board->board_name }}
+                                        </a>
+                                    </li>
                                 @endforeach
                             @else
                                 <!-- 게시판이 5개 초과일 때는 드롭다운 메뉴로 표시 -->
@@ -71,17 +73,17 @@
                                     </a>
                                     <ul class="dropdown-menu">
                                         @foreach($boards as $board)
-                                        <li>
-                                            <a class="dropdown-item {{ request()->routeIs('board.*') && request()->route('board_code') === $board->board_code ? 'active' : '' }}"
-                                               href="{{ route('board.index', $board->board_code) }}">
-                                                @if($board->board_type === 'gallery')
-                                                    <i class="fas fa-images me-2"></i>
-                                                @else
-                                                    <i class="fas fa-list me-2"></i>
-                                                @endif
-                                                {{ $board->board_name }}
-                                            </a>
-                                        </li>
+                                            <li>
+                                                <a class="dropdown-item {{ request()->routeIs('board.*') && request()->route('board_code') === $board->board_code ? 'active' : '' }}"
+                                                   href="{{ route('board.index', $board->board_code) }}">
+                                                    @if($board->board_type === 'gallery')
+                                                        <i class="fas fa-images me-2"></i>
+                                                    @else
+                                                        <i class="fas fa-list me-2"></i>
+                                                    @endif
+                                                    {{ $board->board_name }}
+                                                </a>
+                                            </li>
                                         @endforeach
                                     </ul>
                                 </li>
@@ -89,7 +91,8 @@
                         @endif
 
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('inquiry.*') ? 'active' : '' }}" href="{{ route('inquiry.create') }}">
+                            <a class="nav-link {{ request()->routeIs('inquiry.*') ? 'active' : '' }}"
+                               href="{{ route('inquiry.create') }}">
                                 <i class="fas fa-envelope"></i> 문의하기
                             </a>
                         </li>
@@ -97,7 +100,8 @@
 
                     <!-- 검색 -->
                     <form class="d-flex me-3" action="{{ route('search') }}" method="GET">
-                        <input class="form-control me-2" type="search" name="q" placeholder="검색..." value="{{ request('q') }}">
+                        <input class="form-control me-2" type="search" name="q" placeholder="검색..."
+                               value="{{ request('q') }}">
                         <button class="btn btn-outline-primary" type="submit">
                             <i class="fas fa-search"></i>
                         </button>
@@ -116,7 +120,9 @@
                                             <i class="fas fa-user-edit me-2"></i>마이페이지
                                         </a>
                                     </li>
-                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
                                     <li>
                                         <form action="{{ route('logout') }}" method="POST" class="d-inline">
                                             @csrf

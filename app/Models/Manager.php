@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -50,7 +51,7 @@ class Manager extends Authenticatable
         return in_array($this->role, ['super_admin', 'admin']);
     }
 
-    public function repliedInquiries()
+    public function repliedInquiries(): Manager|HasMany
     {
         return $this->hasMany(Inquiry::class, 'replied_by');
     }
