@@ -40,30 +40,10 @@
                     </div>
 
                     <div class="card-body">
-                        <!-- Password Check Form -->
-                        <div id="passwordCheck" class="mb-4">
-                            <div class="alert alert-info">
-                                <i class="fas fa-lock me-2"></i>
-                                글을 수정하려면 작성 시 입력한 비밀번호를 입력해주세요.
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="input-group">
-                                        <input type="password" class="form-control" id="checkPassword" placeholder="비밀번호 입력">
-                                        <button type="button" class="btn btn-primary" onclick="checkPassword()">
-                                            <i class="fas fa-check me-2"></i>확인
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
                         <!-- Edit Form (Initially Hidden) -->
                         <div id="editForm" style="display: none;">
                             <form action="{{ route('board.update', [$board->board_code, $post]) }}" method="POST" enctype="multipart/form-data">
-                                @csrf
-                                @method('PUT')
-                                <input type="hidden" name="password" id="confirmedPassword">
 
                                 <div class="row mb-3">
                                     <div class="col-md-6">
@@ -214,49 +194,9 @@
 @endsection
 
 @push('scripts')
-@include('components.editor.ckeditor-init', ['selector' => '#content', 'language' => 'ko'])
+    @include('components.editor.ckeditor-init', ['selector' => '#content', 'language' => 'ko'])
 
 <script>
-let ckeditorInstance = null;
-
-function checkPassword() {
-    const password = $('#checkPassword').val();
-
-    if (!password) {
-        alert('비밀번호를 입력해주세요.');
-        return;
-    }
-
-    // 실제로는 서버에서 비밀번호를 확인해야 하지만,
-    // 여기서는 간단히 클라이언트에서 처리
-    $.ajax({
-        url: '{{ route("board.check-password", [$board->board_code, $post]) }}',
-        method: 'POST',
-        data: {
-            _token: $('meta[name="csrf-token"]').attr('content'),
-            password: password
-        },
-        success: function(response) {
-            if (response.success) {
-                $('#passwordCheck').hide();
-                $('#editForm').show();
-                $('#confirmedPassword').val(password);
-
-                @if($board->use_editor)
-                ClassicEditor.create(document.querySelector('#content'), { language: 'ko' })
-                    .then(editor => { ckeditorInstance = editor; })
-                    .catch(error => console.error(error));
-                @endif
-            } else {
-                alert('비밀번호가 일치하지 않습니다.');
-            }
-        },
-        error: function() {
-            alert('오류가 발생했습니다.');
-        }
-    });
-}
-
 function deleteFile(fileId) {
     if (confirm('이 파일을 삭제하시겠습니까?')) {
         $.ajax({
@@ -278,30 +218,5 @@ function deleteFile(fileId) {
         });
     }
 }
-
-$(document).ready(function() {
-    // 엔터키로 비밀번호 확인
-    $('#checkPassword').keypress(function(e) {
-        if (e.which === 13) {
-            checkPassword();
-        }
-    });
-
-    // 에러가 있으면 폼을 바로 표시
-    @if($errors->any())
-        $('#passwordCheck').hide();
-        $('#editForm').show();
-        $('#confirmedPassword').val('{{ old("password") }}');
-
-        @if($board->use_editor)
-        // Froala Editor 초기화
-        froalaEditor = new FroalaEditor('#content', {
-            language: 'ko',
-            height: 400,
-            // ... 설정은 위와 동일
-        });
-        @endif
-    @endif
-});
 </script>
 @endpush

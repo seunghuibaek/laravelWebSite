@@ -191,41 +191,6 @@ class PostController extends Controller
             ->with('success', count($posts) . '개의 게시글이 삭제되었습니다.');
     }
 
-//    private function handleFileUploads(Request $request, BoardPost $post, Board $board)
-//    {
-//        $files = $request->file('files');
-//        $uploadedCount = 0;
-//
-//        foreach ($files as $file) {
-//            if ($uploadedCount >= $board->max_file_count) {
-//                break;
-//            }
-//
-//            $originalName = $file->getClientOriginalName();
-//            $extension = $file->getClientOriginalExtension();
-//            $storedName = Str::random(40) . '.' . $extension;
-//            $filePath = 'uploads/' . $board->upload_folder . '/' . $storedName;
-//
-//            $file->storeAs('uploads/' . $board->upload_folder, $storedName, 'public');
-//
-//            BoardFile::create([
-//                'post_id' => $post->id,
-//                'original_name' => $originalName,
-//                'stored_name' => $storedName,
-//                'file_path' => $filePath,
-//                'mime_type' => $file->getMimeType(),
-//                'file_size' => $file->getSize(),
-//            ]);
-//
-//            $uploadedCount++;
-//        }
-//    }
-//    public function destroy(Request $request, $board_code, BoardPost $post)
-//    {
-//        $post->delete();
-//
-//        return redirect()->route('manager.posts.index', $board_code)->with('success', '게시글이 삭제되었습니다.');
-//    }
     public function uploadImage(Request $request)
     {
         $request->validate([

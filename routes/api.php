@@ -1,11 +1,16 @@
 <?php
 
+use App\Http\Controllers\Manager\PostController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\BoardApiController;
 use App\Http\Controllers\API\AuthController;
 
 // Public: login to get a Sanctum token
 Route::post('/login', [AuthController::class, 'login'])->name('api.login');
+
+// 에디터 파일 업로드
+Route::post('/upload-image', [PostController::class, 'uploadImage'])->name('posts.uploadImage');
 
 Route::middleware('auth:sanctum')->group(function () {
     // 자유게시판 글등록 (JSON)
@@ -18,7 +23,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::post('/auth/token', function (\Illuminate\Http\Request $request) {
     $request->validate(['email'=>'required|email','password'=>'required']);
-    $user = \App\Models\User::where('email',$request->email)->first();
+    $user = User::where('email',$request->email)->first();
     if (!$user || !\Illuminate\Support\Facades\Hash::check($request->password, $user->password)) {
         return response()->json(['message'=>'Invalid credentials'], 401);
     }
